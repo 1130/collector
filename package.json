@@ -4,6 +4,7 @@
   "private": false,
   "dependencies": {
     "request":"*",
-    "cheerio":"*"
+    "cheerio":"*",
+    "iconv-lite":"*"
   }
 }

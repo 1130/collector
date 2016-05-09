@@ -3,19 +3,18 @@
  */
 var request = require('request'),
     cheerio = require('cheerio'),
-    URL_36KR = 'http://36kr.com/';
+    iconv = require('iconv-lite'),
+    URL = 'http://www.bilibili.com/video/movie.html';
 
-/* 开启数据采集器 */
 function run() {
-    dataRequest(URL_36KR);
+    dataRequest(URL);
 }
 
-/* 数据请求 */
 function dataRequest(dataUrl)
 {
     request({
         url: dataUrl,
-        method: 'GET'
+        gzip:true
     }, function(err, res, body) {
         if (err) {
             console.log(dataUrl);
@@ -27,48 +26,23 @@ function dataRequest(dataUrl)
     });
 }
 
-/* 数据解析 */
 function dataParse(body)
 {
     console.log('============================================================================================');
-    console.log('======================================36kr==================================================');
+    console.log('======================================start collecting======================================');
     console.log('============================================================================================');
 
     var $ = cheerio.load(body);
 
-    var articles = $('article');
+    var $list = $('.v-list.sub li');
 
-    for (var i = 0; i < articles.length; i++) {
-        var article = articles[i];
-        var descDoms = $(article).find('.desc');
+    $list.each(function (index, item) {
+        var title = $(item).find('a .t').text();
 
-        if(descDoms.length == 0)
-        {
-            continue;
-        }
-
-        var coverDom = $(article).children().first();
-        var titleDom = $(descDoms).find('.info_flow_news_title');
-        var timeDom = $(descDoms).find('.timeago');
-
-        var titleVal =  titleDom.text();
-        var urlVal = titleDom.attr('href');
-        var timeVal = timeDom.attr('title');
-        var coverUrl = coverDom.attr('data-lazyload');
-
-        //处理时间
-        var timeDateSecs = new Date(timeVal).getTime() / 1000;
-
-        if(urlVal != undefined)
-        {
-            console.info('--------------------------------');
-            console.info('标题：' + titleVal);
-            console.info('地址：' + urlVal);
-            console.info('时间：' + timeDateSecs);
-            console.info('封面：' + coverUrl);
-            console.info('--------------------------------');
-        }
-    }
+        console.info('--------------------------------');
+        console.info('title:' + title);
+        console.info(' ');
+    });
 }
 
 run();
