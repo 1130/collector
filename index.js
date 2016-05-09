@@ -18,26 +18,17 @@ function dataRequest(dataUrl)
         method: 'GET'
     }, function(err, res, body) {
         if (err) {
-            console.log(dataUrl)
+            console.log(dataUrl);
             console.error('[ERROR]Collection' + err);
             return;
         }
 
-        switch(dataUrl)
-        {
-            case URL_36KR:
-
-                dataParse36Kr(body);
-
-                break;
-        }
-
-
+        dataParse(body);
     });
 }
 
-/* 36kr 数据解析 */
-function dataParse36Kr(body)
+/* 数据解析 */
+function dataParse(body)
 {
     console.log('============================================================================================');
     console.log('======================================36kr==================================================');
