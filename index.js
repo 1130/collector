@@ -3,7 +3,6 @@
  */
 var request = require('request'),
     cheerio = require('cheerio'),
-    iconv = require('iconv-lite'),
     URL = 'http://www.bilibili.com/video/movie.html';
 
 function run() {
@@ -28,9 +27,7 @@ function dataRequest(dataUrl)
 
 function dataParse(body)
 {
-    console.log('============================================================================================');
-    console.log('======================================start collecting======================================');
-    console.log('============================================================================================');
+    console.log('===start collecting===');
 
     var $ = cheerio.load(body);
 
