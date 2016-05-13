@@ -1,53 +1,18 @@
 /**
  * Created by xiaochen on 2016/5/9.
  */
-var Request = require('request');
-var Cheerio = require('cheerio');
-var Config = require('./config');
-var Proxy = require('./proxy');
-var URLS = Config.url;
+var Collector = require('./collector');
 
-function run() {
-    if (!Array.isArray(URLS)) {
-        return;
+var config = {
+    url: ['http://www.bilibili.com/video/movie.html'],
+    //url: ['https://api.github.com/repos/request/request'],
+    rule: '.v-list.sub li a .t',
+    delay: 100,
+    proxy: false,
+    complete: function ($item, index) {
+        var title = $item.text();
+        console.info(index + ':' + title);
     }
-    URLS.forEach(function (url) {
-        setTimeout(function () {
-            dataRequest(url);
-        }, Config.delay);
-    });
+};
 
-}
-
-function dataRequest(dataUrl) {
-    Request({
-        url: dataUrl,
-        gzip: true,
-        proxy: Config.proxy ? Proxy.get() : '',
-        headers: {
-            'User-Agent': 'a'
-        }
-    }, function (err, res, body) {
-        if (err) {
-            console.log(dataUrl);
-            console.error('ERROR:' + err);
-            return;
-        }
-
-        dataParse(body);
-    });
-}
-
-function dataParse(body) {
-    var $ = Cheerio.load(body);
-    var $list = $(Config.rule);
-
-    console.log('===start collecting===');
-
-    $list.each(function (index, item) {
-        Config.loaded($(item), index);
-    });
-}
-
-
-run();
+new Collector(config).run();
