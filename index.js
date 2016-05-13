@@ -1,10 +1,11 @@
 /**
  * Created by xiaochen on 2016/5/9.
  */
-var request = require('request');
-var cheerio = require('cheerio');
-var config = require('./config');
-var URLS = config.url;
+var Request = require('request');
+var Cheerio = require('cheerio');
+var Config = require('./config');
+var Proxy = require('./proxy');
+var URLS = Config.url;
 
 function run() {
     if (!Array.isArray(URLS)) {
@@ -13,19 +14,23 @@ function run() {
     URLS.forEach(function (url) {
         setTimeout(function () {
             dataRequest(url);
-        }, config.delay);
+        }, Config.delay);
     });
 
 }
 
 function dataRequest(dataUrl) {
-    request({
+    Request({
         url: dataUrl,
-        gzip: true
+        gzip: true,
+        proxy: Config.proxy ? Proxy.get() : '',
+        headers: {
+            'User-Agent': 'a'
+        }
     }, function (err, res, body) {
         if (err) {
             console.log(dataUrl);
-            console.error('[ERROR]Collection' + err);
+            console.error('ERROR:' + err);
             return;
         }
 
@@ -34,13 +39,13 @@ function dataRequest(dataUrl) {
 }
 
 function dataParse(body) {
-    var $ = cheerio.load(body);
-    var $list = $(config.rule);
+    var $ = Cheerio.load(body);
+    var $list = $(Config.rule);
 
     console.log('===start collecting===');
 
     $list.each(function (index, item) {
-        config.loaded($(item), index);
+        Config.loaded($(item), index);
     });
 }
 

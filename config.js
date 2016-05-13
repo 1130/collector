@@ -1,11 +1,11 @@
 module.exports = {
-    url: ['http://www.bilibili.com/video/movie.html','http://www.bilibili.com/video/movie.html','http://www.bilibili.com/video/movie.html'],
+    url: ['http://www.bilibili.com/video/movie.html'],
+    //url: ['https://api.github.com/repos/request/request'],
     rule: '.v-list.sub li a .t',
-    delay: 1000,
+    delay: 100,
+    proxy: true,
     loaded: function ($item, index) {
         var title = $item.text();
-        console.info(index + ' --------------------------------');
-        console.info('title:' + title);
-        console.info(' ');
+        console.info(index + ':' + title);
     }
 };
