@@ -4,6 +4,7 @@
 var Request = require('request');
 var Cheerio = require('cheerio');
 var Url = require('url');
+var Sleep = require('sleep');
 var Proxy = require('./proxy');
 
 function Collector(config) {
@@ -22,13 +23,15 @@ Collector.prototype.run = function () {
     }
     urls.forEach(function (url) {
         setTimeout(function () {
-            self.request(url, function (body) {
-                self.dataParse(body);
-                if (self.allCompleted(++doneCount, total)) {
-                    self.fetchDetail();
-                }
-            });
+
         }, config.delay);
+        self.request(url, function (body) {
+            self.dataParse(body);
+            if (self.allCompleted(++doneCount, total)) {
+                self.fetchDetail();
+            }
+        });
+        Sleep.sleep(config.delay);
     });
 };
 
@@ -43,6 +46,7 @@ Collector.prototype.fetchDetail = function () {
         self.request(url, function (body) {
             self.config.complete(body, index);
         });
+        Sleep.sleep(3);
     });
 
 };

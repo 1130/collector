@@ -5,10 +5,10 @@ var Collector = require('./collector');
 var Cheerio = require('cheerio');
 
 var config = {
-    url: ['http://www.bilibili.com/video/movie.html'],
+    url: ['http://www.bilibili.com/video/movie.html','http://www.bilibili.com/video/movie.html','http://www.bilibili.com/video/movie.html'],
     //url: ['https://api.github.com/repos/request/request'],
     ruleList: '.v-list.sub li a',
-    delay: 100,
+    delay: 1,
     proxy: false,
     complete: function (body, index) {
         var $ = Cheerio.load(body);
